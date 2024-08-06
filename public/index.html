@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--7.  Default html for root page-->
+    <!-- 8. form with buttons to post and get  -->
+    <form>
+        <input type="text" id="input"/>
+        <button id="get">GET</button>
+        <button id="post">POST</button>
+
+    </form>
+
+    <script>
+        const getButton = document.getElementById('get')
+        const postButton = document.getElementById('post')
+        const input = document.getElementById('input')
+
+        //10. assign event listener to getbutton and pass in getInfo function
+        getButton.addEventListener('click', getInfo)
+        postButton.addEventListener('click', postInfo)
+        //12. do the same for post button
+       
+        
+        // 9. async function getInfo() 
+        // 9b. to name a async function you dont use arrow function because those are anonymous
+        async function getInfo(e) {
+            e.preventDefault() // 13. forms by default refresh page when submitted. this prevents that
+            const response = await fetch('http://localhost:8000/info/' + 'james?key=testkey', {  // 14. dynamic params. Query '?queryfield=query'
+                method: 'GET'
+            })
+            console.log(response)
+            const data = await response.json()
+            input.value = data.info
+        }
+        
+        // 11. postInfo async function
+        async function postInfo(e) {
+            e.preventDefault() // 13. forms by default refresh page when submitted. this prevents that
+
+            if (input.value == '') {
+                return 
+            }
+            const response = await fetch('http://localhost:8000/', {  // 14. dynamic params. Query '?queryfield=query'
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({
+                    payload: input.value // 17. whatever is in input will be sent from front end to backend
+                })
+            })
+            console.log(response)
+            const data = await response.json()
+            input.value = data.info
+        }
+
+    </script>
+
+</body>
+</html>
